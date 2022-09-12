@@ -11,64 +11,35 @@
  */
 public class Solution {
     public ListNode MergeKLists(ListNode[] lists) {
-         ListNode answer = new ListNode();
-            ListNode tail = answer;
-            if (lists == null || lists.Length == 0)
-            {
-                answer = null;
-                return answer;
-            }
+         if (lists.Length == 0)
+                return null;
 
-            int min = int.MaxValue;
-            int minplace = 0;
-            for (int i = 0; i < lists.Length; i++)
+            List<int> list = new List<int>();
+            int i = 0;
+            while(i < lists.Length)
             {
                 if (lists[i] != null)
                 {
-                    if(min > lists[i].val)
-                    {
-                        min = lists[i].val;
-                        minplace = i;
-                    }
+                    list.Add(lists[i].val);
+                    lists[i] = lists[i].next;
                 }
+
+                if (lists[i] == null)
+                    i++;
             }
-            if (min == int.MaxValue)
+            list.Sort();
+
+            if (list.Count == 0)
                 return null;
 
-            answer.val = lists[minplace].val;
-            lists[minplace] = lists[minplace].next;
-            min = int.MaxValue;
+            ListNode head = new ListNode(list[0]);
+            ListNode tail = head;
 
-            bool flag = true;
-            while (flag)
+            for(i = 1; i < list.Count; i++)
             {
-                for (int i = 0; i < lists.Length; i++)
-                {
-                    if (lists[i] != null)
-                    {
-                        if (lists[i].val < min)
-                        {
-                            min = lists[i].val;
-                            minplace = i;
-                        }
-                    }
-                }
-
-                if (min != int.MaxValue)
-                {
-                    tail.next = new ListNode();
-                    tail = tail.next;
-                    tail.val = min;
-                    lists[minplace] = lists[minplace].next;
-                    min = int.MaxValue;
-                }
-
-                flag = false;
-                for (int i = 0; i < lists.Length; i++)
-                    if (lists[i] != null)
-                        flag = true;
+                tail.next = new ListNode(list[i]);
+                tail = tail.next;
             }
-
-            return answer;
+            return head;
     }
 }
